@@ -15,6 +15,11 @@
             opacity: 0;
         }
 
+        .bar {
+            fill: steelblue;
+            cursor: pointer;
+        }
+
         .bar:hover {
             fill: orange;
         }
@@ -49,6 +54,11 @@
             var colorScale = d3.scaleLinear()
                                .domain([0, d3.max(data, d => +d.PurchaseAmount)])
                                .range(["lightblue", "darkblue"]);
+          
+
+            var y = d3.scaleLinear()
+                      .domain([0, d3.max(data, function(d) { return +d.PurchaseAmount; })])
+                      .range([height, 0]);
 
             // Draw bars
             svg.selectAll(".bar")
@@ -57,12 +67,8 @@
                .attr("class", "bar")
                .attr("x", function(d) { return x(d.Chain); })
                .attr("width", x.bandwidth())
-               .attr("y", function(d) { return height; }) // Start from the bottom
-               .attr("height", 0) // Initially height is 0
-               .transition().duration(1000) // Add smooth animation
-               .attr("y", function(d) { return height - (+d.PurchaseAmount); }) // Adjust y position based on PurchaseAmount
-               .attr("height", function(d) { return +d.PurchaseAmount; }) // Set height based on PurchaseAmount
-               .attr("fill", function(d) { return colorScale(+d.PurchaseAmount); }) // Set fill color based on PurchaseAmount
+               .attr("y", function(d) { return y(+d.PurchaseAmount); })
+               .attr("height", function(d) { return height - y(+d.PurchaseAmount); })
                .on("mouseover", handleMouseOver)
                .on("mousemove", handleMouseMove)
                .on("mouseleave", handleMouseLeave)
@@ -82,20 +88,20 @@
             }
 
             function handleMouseLeave(event, d) {
-                d3.select(this).style("fill", function(d) { return colorScale(+d.PurchaseAmount); });
+                d3.select(this).style("fill", "steelblue");
                 d3.select("#tooltip").style("opacity", 0);
             }
 
             // Handle click interaction
             function handleClick(event, d) {
-                console.log("Clicked on chain: " + d.Chain + ", Purchase Amount: " + d.PurchaseAmount);
+                console.log("Clicked on chain: " + d.Chain);
             }
 
             // Label for X Axis
             svg.append("text")             
                 .attr("transform",
                       "translate(" + (width/2) + " ," + 
-                                     (height + margin.top + 40) + ")")
+                                     (height + margin.top + 20) + ")")
                 .style("text-anchor", "middle")
                 .text("Chain");
 
@@ -115,7 +121,7 @@
 
             // Values on Y Axis
             svg.append("g")
-               .call(d3.axisLeft().scale(d3.scaleLinear().domain([0, d3.max(data, d => +d.PurchaseAmount)]).range([height, 0])));
+               .call(d3.axisLeft(y));
         });
     </script>
 </body>
