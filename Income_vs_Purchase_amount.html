@@ -32,8 +32,14 @@
 </head>
 <body>
     <div id="tooltip" class="hidden">
+        <p><strong>Age:</strong> <span id="age"></span></p>
+        <p><strong>Gender:</strong> <span id="gender"></span></p>
         <p><strong>Income:</strong> <span id="income"></span></p>
         <p><strong>Purchase Amount:</strong> <span id="purchase-amount"></span></p>
+        <p><strong>Chain:</strong> <span id="chain"></span></p>
+        <p><strong>Payment Method:</strong> <span id="payment-method"></span></p>
+        <p><strong>Occupation:</strong> <span id="occupation"></span></p>
+        <p><strong>Family Size:</strong> <span id="family-size"></span></p>
     </div>
     <svg id="scatter-plot" width="1000" height="600"></svg>
     <div id="legend"></div>
@@ -96,26 +102,19 @@
                 .attr("cy", function(d) { return y(d.PurchaseAmount); })
                 .style("fill", function(d) { return color(d.category); }) // Assign color based on category
                 .style("cursor", "pointer")
-                .on("mouseover", handleMouseOver)
-                .on("mousemove", handleMouseMove)
-                .on("mouseleave", handleMouseLeave);
+                .on("click", handleMouseClick);
 
-            function handleMouseOver(event, d) {
-                d3.select(this).attr("r", 5); // Increase size on hover
-                d3.select("#tooltip").classed("hidden", false);
-            }
-
-            function handleMouseMove(event, d) {
-                d3.select("#tooltip")
-                  .style("left", (event.pageX + 10) + "px")
-                  .style("top", (event.pageY - 30) + "px");
+            function handleMouseClick(event, d) {
+                d3.select("#age").text(d.Age);
+                d3.select("#gender").text(d.Gender);
                 d3.select("#income").text(d.Income);
                 d3.select("#purchase-amount").text(d.PurchaseAmount);
-            }
+                d3.select("#chain").text(d.Chain);
+                d3.select("#payment-method").text(d.PaymentMethod);
+                d3.select("#occupation").text(d.Occupation);
+                d3.select("#family-size").text(d.FamilySize);
 
-            function handleMouseLeave(event, d) {
-                d3.select(this).attr("r", 3); // Revert size
-                d3.select("#tooltip").classed("hidden", true);
+                d3.select("#tooltip").classed("hidden", false);
             }
 
             // Label for X Axis
