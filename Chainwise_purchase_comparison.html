@@ -88,14 +88,14 @@
 
             // Handle click interaction
             function handleClick(event, d) {
-                console.log("Clicked on chain: " + d.Chain);
+                console.log("Clicked on chain: " + d.Chain + ", Purchase Amount: " + d.PurchaseAmount);
             }
 
             // Label for X Axis
             svg.append("text")             
                 .attr("transform",
                       "translate(" + (width/2) + " ," + 
-                                     (height + margin.top + 20) + ")")
+                                     (height + margin.top + 40) + ")")
                 .style("text-anchor", "middle")
                 .text("Chain");
 
